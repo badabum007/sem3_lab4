@@ -162,8 +162,62 @@ public:
     friend const basic
     operator+(const basic&, double);
     friend const basic operator+(double, const basic&);
+
     friend ostream& operator<<(ostream& s, basic& obj);
+
+    friend const basic& operator--(basic& obj);
+    friend const basic operator--(basic& obj, int);
+
+    friend bool operator>(const basic& obj, double d);
+    friend bool operator>(double d, const basic& obj);
 };
+
+//оператор > (сумма ячеек сравнивается с double)
+bool operator>(const basic& obj, double d)
+{
+    double temp = 0;
+    for(int i = 0; i < obj.x; i++)
+        for(int j = 0; j < obj.y; j++)
+            temp += obj.p[i][j];
+    if(temp > d)
+        return true;
+    else
+        return false;
+}
+
+bool operator>(double d, const basic& obj)
+{
+    double temp = 0;
+    for(int i = 0; i < obj.x; i++)
+        for(int j = 0; j < obj.y; j++)
+            temp += obj.p[i][j];
+    if(d > temp)
+        return true;
+    else
+        return false;
+}
+
+//префиксная версия возвращает значение после инкремента
+const basic& operator--(basic& obj)
+{
+    cout << "Prefix decrement operator" << endl;
+    for(int i = 0; i < obj.x; i++)
+        for(int j = 0; j < obj.y; j++)
+            obj.p[i][j] = --obj.p[i][j];
+    return obj;
+}
+
+//постфиксная версия возвращает до инкремента
+const basic operator--(basic& obj, int)
+{
+    basic temp;
+    temp = obj;
+    cout << "Postfix decrement operator" << endl;
+    for(int i = 0; i < obj.x; i++)
+        for(int j = 0; j < obj.y; j++)
+            obj.p[i][j] = --obj.p[i][j];
+    return temp;
+}
 
 ostream& operator<<(ostream& s, basic& obj)
 {
@@ -233,12 +287,47 @@ int main()
     obj1.show_all();*/
 
     //пример для дружественного оператора =
-    basic obj2(2, 1), obj21;
+    //пример для оператора <<
+    /*basic obj2(2, 1), obj21;
     double d = 8.56;
     obj2.set_object();
     obj2.show_all();
     obj21 = d + obj2 + d;
     obj21.show_all();
-    cout << obj21;
+    cout << obj21;*/
+
+    //пример для дружественных операторов декремента (--)
+    /*basic obj111(1, 2), obj222;
+    obj111.set_object();
+    cout << "obj111" << endl << obj111;
+    obj222 = --obj111;
+    cout << "obj111" << endl << obj111;
+    cout << "obj222" << endl << obj222;
+    obj222 = obj111--;
+    cout << "obj111" << endl << obj111;
+    cout << "obj222" << endl << obj222;*/
+
+    //пример для дружественного оператора >
+    /*basic obj123(1, 2), obj321(2, 1);
+    double d1, d2;
+
+    obj123.set_object();
+    cout << obj123;
+    cout << "Enter value (double): ";
+    cin >> d1;
+    if(obj123 > d1)
+        cout << "obj123 > d1" << endl;
+    else
+        cout << "obj123 <= d1" << endl;
+
+    obj321.set_object();
+    cout << obj321;
+    cout << "Enter value (double): ";
+    cin >> d2;
+    if(d2 > obj321)
+        cout << "d2 > obj3212" << endl;
+    else
+        cout << "d2 <= obj321" << endl;*/
+
     return 0;
 }
