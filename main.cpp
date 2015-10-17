@@ -40,7 +40,7 @@ public:
 
     void show_all()
     {
-        cout << "Showing object" << endl;
+        cout << "Showing object" << endl << "X : " << x << endl << "Y : " << y << endl;
         for(int i = 0; i < x; i++)
             for(int j = 0; j < y; j++)
                 cout << "a[" << i << "][" << j << "]"
@@ -161,8 +161,23 @@ public:
 
     friend const basic
     operator+(const basic&, double);
-    friend const basic operator+(double, const basic& );
+    friend const basic operator+(double, const basic&);
+    friend ostream& operator<<(ostream& s, basic& obj);
 };
+
+ostream& operator<<(ostream& s, basic& obj)
+{
+    s << "Operator <<" << endl;
+    s << "Matrix size:" << endl;
+    s << "X : " << obj.x << endl;
+    s << "Y : " << obj.y << endl;
+    s << "Matrix elements are:" << endl;
+    for(int i = 0; i < obj.x; i++)
+        for(int j = 0; j < obj.y; j++)
+            s << "a[" << i << "][" << j << "]"
+              << " = " << obj.p[i][j] << endl;
+    return s;
+}
 
 const basic operator+(const basic& obj2, double d)
 {
@@ -195,20 +210,20 @@ int main()
     obj1 = obj2;
     obj1.show_all();*/
 
-//пример для локальных new & delete
+    //пример для локальных new & delete
     /*basic* ptr;
     ptr = new basic;
     ptr->show_all();
     delete ptr;*/
 
-//пример для локальных new[] & delete[]
+    //пример для локальных new[] & delete[]
     /*basic* ptr2;
     ptr2 = new basic [2];
     for(int i = 0; i < 2; i++)
         ptr2->show_all();
     delete[] ptr2;*/
 
-//пример для локального оператора = (дописать код)
+    //пример для локального оператора = (дописать код)
     /*basic obj11(1, 1), obj12(2, 2);
     obj11.set_object();
     obj11.show_all();
@@ -217,12 +232,13 @@ int main()
     obj1 + obj2;
     obj1.show_all();*/
 
-//пример для дружественного оператора =
+    //пример для дружественного оператора =
     basic obj2(2, 1), obj21;
     double d = 8.56;
     obj2.set_object();
     obj2.show_all();
-    obj21 = d+obj2 + d ;
+    obj21 = d + obj2 + d;
     obj21.show_all();
+    cout << obj21;
     return 0;
 }
