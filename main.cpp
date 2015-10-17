@@ -151,35 +151,21 @@ public:
          return temp;
      }*/
 
-    /*void compare(const basic& obj2)
+    bool operator<(const basic& obj2)
     {
-        int x_min, y_min;
-
-        if(x > obj2.x)
-            x_min = obj2.x;
+        double sum1 = 0, sum2 = 0;
+        cout << "Local operator <" << endl;
+        for(int i = 0; i < x; i++)
+            for(int j = 0; j < y; j++)
+                sum1 += p[i][j];
+        for(int i = 0; i < x; i++)
+            for(int j = 0; j < y; j++)
+                sum2 += obj2.p[i][j];
+        if(sum1 < sum2)
+            return true;
         else
-            x_min = x;
-
-        if(y > obj2.y)
-            y_min = obj2.y;
-        else
-            y_min = y;
-
-        for(int i = 0; i < x_min; i++) {
-            for(int j = 0; j < y_min; j++)
-                    if(p[i][j]< obj2.p[i][j]) {
-                        cout << "obj1[" << i << "][" << j << "][" << k << "] < ";
-                        cout << "obj2[" << i << "][" << j << "][" << k << "] " << endl;
-                    } else if(p[i][j][k] > obj2.p[i][j][k]) {
-                        cout << "obj1[" << i << "][" << j << "][" << k << "] > ";
-                        cout << "obj2[" << i << "][" << j << "][" << k << "] " << endl;
-                    } else {
-                        cout << "obj1[" << i << "][" << j << "][" << k << "] = ";
-                        cout << "obj2[" << i << "][" << j << "][" << k << "] " << endl;
-                    }
-        }
-        cout << endl;
-    }*/
+            return false;
+    }
 
     friend const basic operator+(const basic&, double);
     friend const basic operator+(double, const basic&);
@@ -346,11 +332,11 @@ int main()
     cout << "Enter value (double): ";
     cin >> d2;
     if(d2 > obj321)
-        cout << "d2 > obj3212" << endl;
+        cout << "d2 > obj321" << endl;
     else
         cout << "d2 <= obj321" << endl;*/
 
-    //пример для дружественных операторов декремента (--)
+    //пример для локальных операторов инкремента (++)
     /*basic obj333(1, 2), obj444;
     obj333.set_object();
     cout << "obj333" << endl << obj333;
@@ -360,6 +346,18 @@ int main()
     obj444 = obj333++;
     cout << "obj333" << endl << obj333;
     cout << "obj444" << endl << obj444;*/
+
+    //пример для локального оператора <
+    /*basic obj555(1, 2), obj666(2, 1);
+    obj555.set_object();
+    cout << obj555;
+    obj666.set_object();
+    cout << obj666;
+    
+    if(obj555 < obj666)
+        cout << "obj555 < obj666" << endl;
+    else
+        cout << "obj555 >= obj666" << endl;*/
 
     return 0;
 }
