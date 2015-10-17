@@ -98,6 +98,28 @@ public:
         free(p);
     }
 
+    //префиксная версия возвращает значение после инкремента
+    const basic&
+    operator++()
+    {
+        cout << "Prefix increment operator" << endl;
+        for(int i = 0; i < (*this).x; i++)
+            for(int j = 0; j < (*this).y; j++)
+                ++(*this).p[i][j];
+        return *this;
+    }
+
+    //постфиксная версия возвращает до инкремента
+    const basic operator++(int)
+    {
+        basic temp;
+        temp = (*this);
+        cout << "Postfix increment operator" << endl;
+        for(int i = 0; i < (*this).x; i++)
+            for(int j = 0; j < (*this).y; j++)
+                ++(*this).p[i][j];
+        return temp;
+    }
     /* const basic
      operator+(const basic& obj2)
      {
@@ -159,8 +181,7 @@ public:
         cout << endl;
     }*/
 
-    friend const basic
-    operator+(const basic&, double);
+    friend const basic operator+(const basic&, double);
     friend const basic operator+(double, const basic&);
 
     friend ostream& operator<<(ostream& s, basic& obj);
@@ -203,7 +224,7 @@ const basic& operator--(basic& obj)
     cout << "Prefix decrement operator" << endl;
     for(int i = 0; i < obj.x; i++)
         for(int j = 0; j < obj.y; j++)
-            obj.p[i][j] = --obj.p[i][j];
+            --obj.p[i][j];
     return obj;
 }
 
@@ -215,7 +236,7 @@ const basic operator--(basic& obj, int)
     cout << "Postfix decrement operator" << endl;
     for(int i = 0; i < obj.x; i++)
         for(int j = 0; j < obj.y; j++)
-            obj.p[i][j] = --obj.p[i][j];
+            --obj.p[i][j];
     return temp;
 }
 
@@ -328,6 +349,17 @@ int main()
         cout << "d2 > obj3212" << endl;
     else
         cout << "d2 <= obj321" << endl;*/
+
+    //пример для дружественных операторов декремента (--)
+    /*basic obj333(1, 2), obj444;
+    obj333.set_object();
+    cout << "obj333" << endl << obj333;
+    obj444 = ++obj333;
+    cout << "obj333" << endl << obj333;
+    cout << "obj444" << endl << obj444;
+    obj444 = obj333++;
+    cout << "obj333" << endl << obj333;
+    cout << "obj444" << endl << obj444;*/
 
     return 0;
 }
