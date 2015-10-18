@@ -3,51 +3,74 @@
 
 using namespace std;
 
+class size
+{
+    int x;
+    int y;
+
+public:
+    size(int a = 0, int b = 0)
+    {
+        cout << "Creating size" << endl;
+        x = a;
+        y = b;
+    }
+    ~size()
+    {
+        cout << "Deleting size" << endl;
+    }
+    void show()
+    {
+        cout << "Size: " << endl;
+        cout << "x : " << x << endl;
+        cout << "y : " << y << endl;
+    }
+};
+
 class basic
 {
     double** p;
     int x;
     int y;
 
-    void alloc(int x, int y)
+public:
+    basic(const basic& obj)
+    {
+        cout << "Copying constructor is working" << endl;
+        x=obj.x;
+        y=obj.y;
+        alloc();
+        for(int i = 0; i < x; i++)
+            for(int j = 0; j < y; j++)
+                p[i][j]=obj.p[i][j];
+    }
+    void alloc()
     {
         p = new double* [x];
         for(int i = 0; i < x; i++)
             *(p + i) = new double[y];
     }
 
-    void free_mem(int x, int y)
+    void free_mem()
     {
         for(int i = 0; i < x; i++)
             delete[] * (p + i);
         delete[] p;
     }
 
-public:
-    /*basic(int x1 = 0, int y1 = 0)
+    basic(int x1 = 0, int y1 = 0)
     {
         cout << "Creating basic" << endl;
         x = x1;
         y = y1;
-        alloc(x, y);
-    }*/
-
-    basic()
-    {
-        cout << "Creating basic" << endl;
-        x = 0;
-        y = 0;
-        p = 0;
-        // alloc(x, y);
+        alloc();
     }
 
     ~basic()
     {
         cout << "Deleting basic" << endl;
-        free_mem(x, y);
+        free_mem();
     }
-    
-    basic operator()(int, int);
 
     void show_all()
     {
@@ -76,10 +99,10 @@ public:
     const basic& operator=(const basic& obj2)
     {
         cout << "Operator =" << endl;
-        free_mem(x, y);
+        free_mem();
         x = obj2.x;
         y = obj2.y;
-        alloc(x, y);
+        alloc();
         for(int i = 0; i < x; i++)
             for(int j = 0; j < y; j++)
                 (*this).p[i][j] = obj2.p[i][j];
@@ -207,14 +230,14 @@ public:
             return false;
     }
 
-    //дописать ()
-    basic operator()(int a, int b)
+    basic& operator()(int a, int b, int c)
     {
         cout << "Operator ()" << endl;
         x = a;
         y = b;
-        alloc(x, y);
-        // set_object();
+        free_mem();
+        p = 0;
+        alloc();
         return *this;
     }
 
@@ -224,6 +247,21 @@ public:
         if(i < 0 || i >= x)
             return p[0];
         return p[i];
+    }
+
+    operator double()
+    {
+        double min = p[0][0];
+        for(int i = 0; i < x; i++)
+            for(int j = 0; j < y; j++)
+                if(min > p[i][j])
+                    min = p[i][j];
+        return min;
+    }
+
+    operator size()
+    {
+        return size(x, y);
     }
 
     friend const basic operator+(const basic&, double);
@@ -428,10 +466,10 @@ int main()
     cout << obj_sum << endl;*/
 
     //пример для оператора ()
-    basic obj1_3;
-    obj1_3(1, 2, 3);
-    // cout<<*obj1_3<<endl;
-    // delete obj1_3;
+    /*basic obj1_3,obj;
+    obj1_3(2, 2, 1);
+    obj1_3.set_object();
+    cout << obj1_3 << endl;*/
 
     //пример для оператора индексирования []
     /*basic cobj(1,3);
@@ -439,6 +477,19 @@ int main()
     cout<<cobj[0][2]<<endl;
     cout<<cobj[3][1]<<endl;
     cout<<cobj[-1][1]<<endl;*/
+
+    //пример для оператора приведения к double
+    /*double min;
+    basic cobject(2,2);
+    cobject.set_object();
+    min=cobject;
+    cout <<"Minimal element: "<<min<<endl;*/
+
+    //пример для преобразования в пользовательский класс
+    /*size s;
+    basic base(3, 8);
+    s = base;
+    s.show();*/
 
     return 0;
 }
