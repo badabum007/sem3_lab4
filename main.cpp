@@ -9,21 +9,6 @@ class basic
     int x;
     int y;
 
-public:
-    basic(int x1 = 0, int y1 = 0)
-    {
-        cout << "Creating basic" << endl;
-        x = x1;
-        y = y1;
-        alloc(x, y);
-    }
-
-    ~basic()
-    {
-        cout << "Deleting basic" << endl;
-        free_mem(x, y);
-    }
-
     void alloc(int x, int y)
     {
         p = new double* [x];
@@ -37,6 +22,32 @@ public:
             delete[] * (p + i);
         delete[] p;
     }
+
+public:
+    /*basic(int x1 = 0, int y1 = 0)
+    {
+        cout << "Creating basic" << endl;
+        x = x1;
+        y = y1;
+        alloc(x, y);
+    }*/
+
+    basic()
+    {
+        cout << "Creating basic" << endl;
+        x = 0;
+        y = 0;
+        p = 0;
+        // alloc(x, y);
+    }
+
+    ~basic()
+    {
+        cout << "Deleting basic" << endl;
+        free_mem(x, y);
+    }
+    
+    basic operator()(int, int);
 
     void show_all()
     {
@@ -109,7 +120,7 @@ public:
         return *this;
     }
 
-    //постфиксная версия возвращает до инкремента
+    //постфиксная версия возвращает значение до инкремента
     const basic operator++(int)
     {
         basic temp;
@@ -120,36 +131,65 @@ public:
                 ++(*this).p[i][j];
         return temp;
     }
-    /* const basic
-     operator+(const basic& obj2)
-     {
-         int x_min, y_min, x_max, y_max;
 
-         cout << "Operator +" << endl;
-         if(x > obj2.x) {
-             x_min = obj2.x;
-             x_max = x;
-         } else {
-             x_min = x;
-             x_max = obj2.x;
-         }
+    const basic operator+(const basic& obj2)
+    {
+        int x_min, y_min, x_max, y_max;
 
-         if(y > obj2.y) {
-             y_min = obj2.y;
-             y_max = y;
-         } else {
-             y_min = y;
-             y_max = obj2.y;
-         }
+        cout << "Operator +" << endl;
+        if(x > obj2.x) {
+            x_min = obj2.x;
+            x_max = x;
+        } else {
+            x_min = x;
+            x_max = obj2.x;
+        }
 
-         basic temp(x_max, y_max);
+        if(y > obj2.y) {
+            y_min = obj2.y;
+            y_max = y;
+        } else {
+            y_min = y;
+            y_max = obj2.y;
+        }
 
-         for(int i = 0; i < x_min; i++)
-             for(int j = 0; j < y_min; j++)
-                 temp.p[i][j] = p[i][j] + obj2.p[i][j];
-                 //дописать дополнение разных элементов
-         return temp;
-     }*/
+        basic temp(x_max, y_max);
+
+        for(int i = 0; i < x_min; i++)
+            for(int j = 0; j < y_min; j++)
+                temp.p[i][j] = p[i][j] + obj2.p[i][j];
+
+        if(x == x_max && y == y_max)
+            for(int i = x_min; i < x_max; i++)
+                for(int j = y_min; j < y_max; j++)
+                    temp.p[i][j] = p[i][j];
+
+        if(obj2.x == x_max && obj2.y == y_max)
+            for(int i = x_min; i < x_max; i++)
+                for(int j = y_min; j < y_max; j++)
+                    temp.p[i][j] = obj2.p[i][j];
+
+        if(obj2.x == x_max && y == y_max) {
+            for(int i = 0; i < x_min; i++)
+                for(int j = y_min; j < y_max; j++)
+                    temp.p[i][j] = p[i][j];
+
+            for(int i = x_min; i < x_max; i++)
+                for(int j = 0; j < y_min; j++)
+                    temp.p[i][j] = obj2.p[i][j];
+        }
+
+        if(x == x_max && obj2.y == y_max) {
+            for(int i = 0; i < x_min; i++)
+                for(int j = y_min; j < y_max; j++)
+                    temp.p[i][j] = obj2.p[i][j];
+
+            for(int i = x_min; i < x_max; i++)
+                for(int j = 0; j < y_min; j++)
+                    temp.p[i][j] = p[i][j];
+        }
+        return temp;
+    }
 
     bool operator<(const basic& obj2)
     {
@@ -165,6 +205,25 @@ public:
             return true;
         else
             return false;
+    }
+
+    //дописать ()
+    basic operator()(int a, int b)
+    {
+        cout << "Operator ()" << endl;
+        x = a;
+        y = b;
+        alloc(x, y);
+        // set_object();
+        return *this;
+    }
+
+    double*& operator[](int i)
+    {
+        cout << "Operator []" << endl;
+        if(i < 0 || i >= x)
+            return p[0];
+        return p[i];
     }
 
     friend const basic operator+(const basic&, double);
@@ -214,7 +273,7 @@ const basic& operator--(basic& obj)
     return obj;
 }
 
-//постфиксная версия возвращает до инкремента
+//постфиксная версия возвращает значение до инкремента
 const basic operator--(basic& obj, int)
 {
     basic temp;
@@ -353,11 +412,33 @@ int main()
     cout << obj555;
     obj666.set_object();
     cout << obj666;
-    
+
     if(obj555 < obj666)
         cout << "obj555 < obj666" << endl;
     else
         cout << "obj555 >= obj666" << endl;*/
+
+    //пример для оператора +(локального)
+    /*basic objl_1(2, 1), objl_2(1, 2), obj_sum;
+    objl_1.set_object();
+    cout << objl_1;
+    objl_2.set_object();
+    cout << objl_2;
+    obj_sum = objl_1 + objl_2;
+    cout << obj_sum << endl;*/
+
+    //пример для оператора ()
+    basic obj1_3;
+    obj1_3(1, 2, 3);
+    // cout<<*obj1_3<<endl;
+    // delete obj1_3;
+
+    //пример для оператора индексирования []
+    /*basic cobj(1,3);
+    cobj.set_object();
+    cout<<cobj[0][2]<<endl;
+    cout<<cobj[3][1]<<endl;
+    cout<<cobj[-1][1]<<endl;*/
 
     return 0;
 }
